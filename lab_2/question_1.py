@@ -24,4 +24,3 @@ cov_numpy = np.cov(X, rowvar=False)
 
 print("\nCovariance (numpy):\n", cov_numpy)
 
-
