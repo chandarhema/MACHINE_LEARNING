@@ -15,7 +15,7 @@ def load_data():
 
 # 2. Split data
 def split_data(X, y):
-    return train_test_split(X, y, test_size=0.3, random_state=42)
+    return train_test_split(X, y, test_size=0.3,random_state=42)
 
 # 3. Impute missing values
 def impute_data(X_train, X_test):
