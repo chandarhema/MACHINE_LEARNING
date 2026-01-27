@@ -9,18 +9,18 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-
+import sys
 data = pd.read_csv('simulated_data_multiple_linear_regression_for_ML.csv')
 
 # 1. Load data
 def load_data():
-    X=data.drop("disease_score", axis=1)
+    X=data.drop(columns=["disease_score","disease_score_fluct"], axis=1)
     y=data["disease_score"]
     return X,y,data,data.head()
 
 # 2. Split data
 def split_data(X, y):
-    return train_test_split(X, y, test_size=0.3,random_state=42)
+    return train_test_split(X, y, test_size=0.3,random_state=100)
 
 # 3. Impute missing values
 def impute_data(X_train, X_test):
