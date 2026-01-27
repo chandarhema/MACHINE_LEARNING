@@ -14,13 +14,14 @@ data = pd.read_csv('simulated_data_multiple_linear_regression_for_ML.csv')
 
 # 1. Load data
 def load_data():
-    X=data.drop("disease_score_fluct", axis=1)
+    X=data.drop(columns=["disease_score","disease_score_fluct"], axis=1)
     y=data["disease_score_fluct"]
     return X,y,data,data.head()
 
 # 2. Split data
 def split_data(X, y):
-    return train_test_split(X, y, test_size=0.3)
+    A= train_test_split(X, y, test_size=0.3,random_state=999)
+    return A
 
 # 3. Impute missing values
 def impute_data(X_train, X_test):
@@ -51,29 +52,39 @@ def test_model(model, X_test, y_test):
 def main():
     X, y, frame, description = load_data()
 
+    X_train, X_test, y_train, y_test = split_data(X, y)
+
+    X_train, X_test = impute_data(X_train, X_test)
+
+    X_train, X_test = standardize_data(X_train, X_test)
+
+    model = train_model(X_train, y_train)
+
+    y_pred, r2 = test_model(model, X_test, y_test)
+
     print("\nDataset Description:\n")
     print(description)
 
     print("\nFull Dataset (first 10 rows):\n")
     print(frame.head(10))
 
-    X_train, X_test, y_train, y_test = split_data(X, y)
+
 
     print("\nX_train shape:", X_train.shape)
     print("X_test shape:", X_test.shape)
 
-    X_train, X_test = impute_data(X_train, X_test)
+
     # print("\nAfter Imputation (first 5 rows of X_train):\n", X_train)
 
-    X_train, X_test = standardize_data(X_train, X_test)
+
     # print("\nAfter Standardization (first 5 rows of X_train):\n", X_train)
 
-    model = train_model(X_train, y_train)
+
 
     # print("\nLearned Coefficients:\n", model.coef_)
     # print("Intercept:", model.intercept_)
 
-    y_pred, r2 = test_model(model, X_test, y_test)
+
 
     print("\nPredicted values (or) disease_score” :\n", y_pred)
     print("\nActual values:\n", y_test.values)
