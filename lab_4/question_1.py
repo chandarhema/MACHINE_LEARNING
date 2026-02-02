@@ -6,7 +6,7 @@ def load_data():
     return X, Y
 
 
-def gradient_descent(X, y, theta, alpha, num_iters):
+def gradient_descent(X, Y, theta, alpha, num_iters):
     m = len(X)
 
     for i in range(num_iters):
@@ -14,13 +14,13 @@ def gradient_descent(X, y, theta, alpha, num_iters):
         y_pred = np.dot(X, theta)
 
         # gradient
-        gradient = (1/m) * np.dot(X.T, (y_pred - y))
+        gradient = (1/m) * np.dot(X.T, (y_pred - Y))
 
         # update theta
         theta = theta - alpha * gradient
 
         # correct cost
-        cost = (1/(2*m)) * np.sum((y_pred - y)**2)
+        cost = (1/(2*m)) * np.sum((y_pred - Y)**2)
 
         if i % 100 == 0:
             print(f"Iteration {i} | Cost: {cost:.2f}")
