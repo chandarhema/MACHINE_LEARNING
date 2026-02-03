@@ -19,6 +19,8 @@ def form_x_and_y(data):
     Y=Y.reshape(-1, 1)
     return X, Y
 
+# def train_test_split():
+
 def compute_hypothesis(X, theta):
     hypothesis = X.dot(theta)
     return hypothesis
@@ -35,10 +37,10 @@ def compute_derivative(X, y, theta):
     gradient = (1 / m) * np.dot(X.T, (y_pred - y))
     return gradient
 
-# def compute_r2(y_true, y_pred):
-#     ss_res = np.sum((y_true - y_pred) ** 2)
-#     ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-#     return 1 - (ss_res / ss_tot)
+def compute_r2(Y, y_pred):
+    ss_res = np.sum((Y - y_pred) ** 2)
+    ss_tot = np.sum((Y - np.mean(Y)) ** 2)
+    return 1 - (ss_res / ss_tot)
 
 def theta1(X, Y):
     X_T_X = np.linalg.inv(X.T.dot(X))
@@ -71,7 +73,7 @@ def main():
  # --------------------------------------------------
 
     theta=theta1(X,Y)
-    print("theta of normal equation =", theta)
+    print("theta of normal equation \n", theta)
 
 #--------------------------------------------------
     #for gradient descent
@@ -81,6 +83,7 @@ def main():
     num_iters = 1000
     gradient = gradient_descent(X, Y, alpha, num_iters)
     print("gradient", gradient)
+    print(f"r2:", compute_r2(Y, compute_hypothesis(X, theta)))
 
 if __name__ == "__main__":
     main()
