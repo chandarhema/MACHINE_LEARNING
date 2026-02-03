@@ -7,19 +7,37 @@ You can compare the results with scikit-learn and your own gradient descent impl
 import sys
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
+
+# data = pd.read_csv("simulated_data_multiple_linear_regression_for_ML.csv")
+# print(data.shape)
+# print(data.head(43))
+# sys.exit()
 
 def load_data():
     data = pd.read_csv("simulated_data_multiple_linear_regression_for_ML.csv")
+    # print(data)
     return data
 
 def form_x_and_y(data):
     X=data.drop(columns=["disease_score","disease_score_fluct"], axis=1).values
+    # print(f"X.shape: {X.shape}")
     Y=data["disease_score"].values
     X=np.c_[X,np.ones((X.shape[0],1))]
     Y=Y.reshape(-1, 1)
     return X, Y
 
-# def train_test_split():
+def train_test_split1(X,Y):
+    X_train, X_valid, y_train, y_valid = train_test_split(X, Y, train_size=0.8,test_size=0.2, random_state=42)
+    # print(f"X_train:\n {X_train}")
+    # print(f"X_train.shape:\n {X_train.shape}")
+    # print(f"X_valid:\n {X_valid}")
+    # print(f"X_valid.shape:\n {X_valid.shape}")
+    # print(f"y_train:\n {y_train}")
+    # print(f"y_train.shape:\n {y_train.shape}")
+    # print(f"y_valid:\n {y_valid}")
+    # print(f"y_valid.shape: \n{y_valid.shape}")
+    return X_train, X_valid, y_train, y_valid
 
 def compute_hypothesis(X, theta):
     hypothesis = X.dot(theta)
@@ -73,7 +91,7 @@ def main():
  # --------------------------------------------------
 
     theta=theta1(X,Y)
-    print("theta of normal equation \n", theta)
+    # print("theta of normal equation \n", theta)
 
 #--------------------------------------------------
     #for gradient descent
@@ -83,7 +101,10 @@ def main():
     num_iters = 1000
     gradient = gradient_descent(X, Y, alpha, num_iters)
     print("gradient", gradient)
-    print(f"r2:", compute_r2(Y, compute_hypothesis(X, theta)))
+
+    hypo=compute_hypothesis(X, theta)
+    print(f"r2:", compute_r2(Y, hypo))
+    train_test_split1(X, Y)
 
 if __name__ == "__main__":
     main()
