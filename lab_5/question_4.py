@@ -103,6 +103,39 @@ def scale_features(X_train, X_test):
     Scaling is very important for Logistic Regression
     to ensure faster and stable convergence.
     """
+
+    # Example (before scaling):
+    # X_train =
+    # [[10, 100],
+    #  [20, 200],
+    #  [30, 300]]
+
+    # Mean of each column:
+    # Feature 1 mean = (10 + 20 + 30) / 3 = 20
+    # Feature 2 mean = (100 + 200 + 300) / 3 = 200
+
+    # Standard deviation (approx):
+    # Feature 1 std ≈ 8.16
+    # Feature 2 std ≈ 81.65
+
+    # Standardization formula:
+    # z = (x - mean) / std
+
+    # Example transformation:
+    # (10 - 20) / 8.16 ≈ -1.22
+    # (20 - 20) / 8.16 = 0
+    # (30 - 20) / 8.16 ≈ 1.22
+
+    # After scaling, X_train becomes:
+    # [[-1.22, -1.22],
+    #  [ 0.00,  0.00],
+    #  [ 1.22,  1.22]]
+
+    # Important:
+    # fit() is done ONLY on training data
+    # transform() is applied to both train and test data
+    # This avoids data leakage
+
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
