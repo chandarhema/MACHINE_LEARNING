@@ -27,7 +27,7 @@ def clean_data(data):
     - Columns with all missing values are removed
     """
     data = data.drop(columns=["id"], errors="ignore")
-    data = data.dropna(axis=1, how="all")
+    data = data.dropna(axis=1, how="all")   # removes incomplete rows (any NaN in row)
     return data
 
 # --------------------------------------------------
@@ -55,6 +55,27 @@ def handle_missing_values(X):
     Replaces NaN or infinite values with numerical values.
     Logistic Regression cannot work with NaN values.
     """
+    # Example input X (with missing & infinite values):
+    # X = np.array([
+    #     [1.0,  2.0,  np.nan],
+    #     [4.0,  np.inf, 6.0],
+    #     [7.0, -np.inf, 9.0]
+    # ])
+
+    # Before:
+    # [[ 1.  2. nan]
+    #  [ 4. inf  6.]
+    #  [ 7. -inf  9.]]
+
+    # np.nan_to_num() replaces:
+    # nan      -> 0.0
+    # +inf     -> 0.0
+    # -inf     -> 0.0
+
+    # After applying handle_missing_values(X):
+    # [[1. 2. 0.]
+    #  [4. 0. 6.]
+    #  [7. 0. 9.]]
     return np.nan_to_num(X)
 
 # --------------------------------------------------
