@@ -92,7 +92,7 @@ def main():
 
     theta = np.zeros(X.shape[1])
     alpha = 0.1
-    iterations = 30000
+    iterations = 30001
 
     for i in range(iterations):
         gradient = compute_derivative(X, y_scaled, theta)

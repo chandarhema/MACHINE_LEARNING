@@ -51,7 +51,7 @@ def preprocessing(X_train, X_test):
     return X_train, X_test
 
 def model_selection(X_train, X_test, y_train, y_test):
-    model = LinearRegression()
+    model = LinearRegression(fit_intercept=True)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     rmse = mean_squared_error(y_test, y_pred)
