@@ -1,6 +1,10 @@
+"""Implement a decision regression tree algorithm without using scikit-learn using the diabetes dataset.
+Fetch the dataset from scikit-learn library.
+"""
+
 import numpy as np
 import pandas as pd
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_diabetes
 from sklearn.model_selection import train_test_split
 
 
@@ -8,72 +12,68 @@ from sklearn.model_selection import train_test_split
 # LOAD DATA
 # -------------------------------
 def load_dataset():
-    iris = load_iris()
-    return iris.data, iris.target
+    data = load_diabetes()
+    return data.data, data.target
 
 
 # -------------------------------
-# ENTROPY
+# VARIANCE (MSE)
 # -------------------------------
-def entropy(y):
-    unique, counts = np.unique(y, return_counts=True)
-    prob = counts / len(y)
-    return -np.sum(prob * np.log2(prob))
+def variance(y):
+    return np.var(y)
 
 
 # -------------------------------
-# INFORMATION GAIN
+# SPLIT ERROR (Weighted variance)
 # -------------------------------
-def information_gain(X_column, y, threshold):
-    parent_entropy = entropy(y)
+def split_error(X_column, y, threshold):
 
     left_mask = X_column <= threshold
     right_mask = X_column > threshold
 
     if len(y[left_mask]) == 0 or len(y[right_mask]) == 0:
-        return 0
+        return float('inf')
 
     n = len(y)
     n_left = len(y[left_mask])
     n_right = len(y[right_mask])
 
-    left_entropy = entropy(y[left_mask])
-    right_entropy = entropy(y[right_mask])
+    left_var = variance(y[left_mask])
+    right_var = variance(y[right_mask])
 
-    child_entropy = (n_left/n)*left_entropy + (n_right/n)*right_entropy
+    weighted_error = (n_left/n)*left_var + (n_right/n)*right_var
 
-    return parent_entropy - child_entropy
+    return weighted_error
 
 
 # -------------------------------
 # BEST SPLIT
 # -------------------------------
 def best_split(X, y):
-    best_gain = -1
-    split_feature = None
-    split_threshold = None
+    best_error = float('inf')
+    best_feature = None
+    best_threshold = None
 
     for feature in range(X.shape[1]):
         X_column = X[:, feature]
         thresholds = np.unique(X_column)
 
         for t in thresholds:
-            gain = information_gain(X_column, y, t)
+            error = split_error(X_column, y, t)
 
-            if gain > best_gain:
-                best_gain = gain
-                split_feature = feature
-                split_threshold = t
+            if error < best_error:
+                best_error = error
+                best_feature = feature
+                best_threshold = t
 
-    return split_feature, split_threshold
+    return best_feature, best_threshold
 
 
 # -------------------------------
-# LEAF VALUE
+# LEAF VALUE (mean)
 # -------------------------------
 def leaf_value(y):
-    unique, counts = np.unique(y, return_counts=True)
-    return unique[np.argmax(counts)]
+    return np.mean(y)
 
 
 # -------------------------------
@@ -81,7 +81,7 @@ def leaf_value(y):
 # -------------------------------
 def build_tree(X, y, depth=0, max_depth=3):
 
-    if len(np.unique(y)) == 1 or depth >= max_depth:
+    if len(y) <= 2 or depth >= max_depth:
         return leaf_value(y)
 
     feature, threshold = best_split(X, y)
@@ -125,10 +125,10 @@ def predict(X, tree):
 
 
 # -------------------------------
-# ACCURACY
+# MSE
 # -------------------------------
-def accuracy(y_true, y_pred):
-    return np.sum(y_true == y_pred) / len(y_true)
+def mse(y_true, y_pred):
+    return np.mean((y_true - y_pred) ** 2)
 
 
 # -------------------------------
@@ -137,48 +137,37 @@ def accuracy(y_true, y_pred):
 def main():
     X, y = load_dataset()
 
-    # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    # Training
+    # TRAIN
     tree = build_tree(X_train, y_train, max_depth=3)
 
-    # Testing
+    # TEST
     y_pred = predict(X_test, tree)
 
-    # Accuracy
-    acc = accuracy(y_test, y_pred)
+    # EVALUATION
+    error = mse(y_test, y_pred)
 
-    # -------------------------------
-    # TABULAR OUTPUT
-    # -------------------------------
+    # TABLE
     result_table = pd.DataFrame({
         "Actual": y_test,
         "Predicted": y_pred
     })
 
-    result_table["Correct"] = result_table["Actual"] == result_table["Predicted"]
-
-    # Print results
     print("\nPrediction Table:")
     print(result_table)
 
-    print("\nAccuracy:", acc)
+    print("\nMSE:", error)
 
-    # Return everything
-    results = {
+    return {
         "tree": tree,
         "predictions": y_pred,
-        "accuracy": acc,
+        "mse": error,
         "table": result_table
     }
-
-    return results
 
 
 if __name__ == "__main__":
     output = main()
-
-
