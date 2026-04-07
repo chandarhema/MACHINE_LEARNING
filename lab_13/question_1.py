@@ -1,4 +1,5 @@
-"""Implement bagging regressor and classifier using scikit-learn. Use diabetes and iris datasets."""
+"""Implement bagging regressor and classifier using scikit-learn.
+ Use diabetes and iris datasets."""
 
 import pandas as pd
 from sklearn.model_selection import train_test_split

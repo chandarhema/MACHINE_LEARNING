@@ -74,7 +74,7 @@ def preprocessing(X_train, X_test):
 # -------------------------------
 def train_model(X_train, y_train):
 
-    base_model = DecisionTreeClassifier(max_depth=1)
+    base_model = DecisionTreeClassifier(max_depth=1 )
 
     model = AdaBoostClassifier(
         estimator=base_model,
