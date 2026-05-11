@@ -57,7 +57,7 @@ def split_data(X, y):
 # TRAIN
 # -------------------------------
 def train_model(X_train, y_train):
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=10000)
     model.fit(X_train, y_train)
     return model
 
@@ -138,4 +138,5 @@ def main():
 # -------------------------------
 # RUN
 # -------------------------------
-main()
+if __name__ == "__main__":
+    main()

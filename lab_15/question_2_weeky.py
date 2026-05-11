@@ -5,7 +5,7 @@ Dataset: Weekly (ISLP)
 # =========================================================
 # IMPORT
 # =========================================================
-from ISLP import load_data
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingClassifier
@@ -17,7 +17,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 # LOAD + SPLIT
 # =========================================================
 def load_data_weekly():
-    data = load_data("Weekly")
+    data = pd.read_csv("Weekly.csv")
     X = data.drop(columns=["Direction"])
     y = data["Direction"].map({"Up": 1, "Down": 0})
     return X, y

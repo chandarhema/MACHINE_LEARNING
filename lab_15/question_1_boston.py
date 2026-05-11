@@ -5,7 +5,8 @@ Dataset: Boston (ISLP)
 # =========================================================
 # IMPORT
 # =========================================================
-from ISLP import load_data
+# from ISLP import load_data
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingRegressor
@@ -17,7 +18,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 # LOAD + SPLIT
 # =========================================================
 def load_data_boston():
-    data = load_data("Boston")
+    data = pd.read_csv("Boston.csv")
     X = data.drop(columns=["medv"])
     y = data["medv"]
     return X, y
@@ -68,10 +69,10 @@ def main():
 
     print("\n--- REGRESSION COMPARISON ---")
     print("\nGradient Boosting:")
-    print("MSE:", gbr_mse, "R2:", gbr_r2)
+    print("MSE:", gbr_mse, "\nR2:", gbr_r2)
 
     print("\nLasso:")
-    print("MSE:", las_mse, "R2:", las_r2)
+    print("MSE:", las_mse, "\nR2:", las_r2)
 
 
 if __name__ == "__main__":
